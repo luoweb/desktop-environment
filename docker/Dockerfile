@@ -355,8 +355,13 @@ RUN curl -fsSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc | tee /etc/apt/tru
 
 # Install nodejs
 # RUN curl -fsSL https://nodejs.org/dist/v20.18.0/node-v20.18.0-linux-x64.tar.xz | \
-RUN curl -fsSL https://nodejs.org/dist/v20.18.0/node-v20.18.0-linux-$(uname -m).tar.xz | \
-  tar -C /usr/local -Jx --strip-components=1
+RUN if [ "$(uname -m)" = "x86_64" ]; then \
+  curl -fsSL https://nodejs.org/dist/v20.18.0/node-v20.18.0-linux-x64.tar.xz | tar -C /usr/local -Jx --strip-components=1; \
+  elif [ "$(uname -m)" = "aarch64" ]; then \
+  curl -fsSL https://nodejs.org/dist/v20.18.0/node-v20.18.0-linux-arm64.tar.xz | tar -C /usr/local -Jx --strip-components=1; \
+  else \
+  echo "Unsupported architecture: $(uname -m)" && exit 1; \
+  fi
 
 # Install novnc
 RUN git clone --depth 1 https://github.com/cloud-computer/noVNC.git /opt/noVNC && \
