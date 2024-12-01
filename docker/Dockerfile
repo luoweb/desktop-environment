@@ -168,57 +168,57 @@ RUN apt-get install -qq libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev l
   cargo clean
 
 # Install arc
-RUN wget -qnv -O /usr/local/bin/arc https://github.com/mholt/archiver/releases/download/v3.5.0/arc_3.5.0_linux_amd64 && \
-  chmod +x /usr/local/bin/arc
+# RUN wget -qnv -O /usr/local/bin/arc https://github.com/mholt/archiver/releases/download/v3.5.0/arc_3.5.0_linux_amd64 && \
+#   chmod +x /usr/local/bin/arc
 
 # Install aws cli
-RUN curl -fsSL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip && \
-  unzip awscliv2.zip && \
-  ./aws/install && \
-  rm -rf aws awscliv2.zip
+# RUN curl -fsSL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip && \
+#   unzip awscliv2.zip && \
+#   ./aws/install && \
+#   rm -rf aws awscliv2.zip
 
 # Install bandwhich
-RUN curl -fsSL https://github.com/imsnif/bandwhich/releases/download/0.20.0/bandwhich-v0.20.0-x86_64-unknown-linux-musl.tar.gz | \
-  tar -C /usr/local/bin -xzf - bandwhich
+# RUN curl -fsSL https://github.com/imsnif/bandwhich/releases/download/0.20.0/bandwhich-v0.20.0-x86_64-unknown-linux-musl.tar.gz | \
+#   tar -C /usr/local/bin -xzf - bandwhich
 
 # Install beekeeper studio
-RUN wget -qnv -O beekeeper-studio.deb https://github.com/beekeeper-studio/beekeeper-studio/releases/download/v3.7.10/beekeeper-studio_3.7.10_amd64.deb && \
-  dpkg -i beekeeper-studio.deb && \
-  rm beekeeper-studio.deb
+# RUN wget -qnv -O beekeeper-studio.deb https://github.com/beekeeper-studio/beekeeper-studio/releases/download/v3.7.10/beekeeper-studio_3.7.10_amd64.deb && \
+#   dpkg -i beekeeper-studio.deb && \
+#   rm beekeeper-studio.deb
 
 # Install bottom
-RUN wget -qnv -O bottom.deb https://github.com/ClementTsang/bottom/releases/download/0.10.2/bottom_0.10.2-1_amd64.deb && \
-  dpkg -i bottom.deb && \
-  rm bottom.deb
+# RUN wget -qnv -O bottom.deb https://github.com/ClementTsang/bottom/releases/download/0.10.2/bottom_0.10.2-1_amd64.deb && \
+#   dpkg -i bottom.deb && \
+#   rm bottom.deb
 
 # Install cursor
-RUN wget -qnv -O cursor.appimage https://downloader.cursor.sh/linux/appImage/x64 && \
-  chmod +x cursor.appimage && \
-  ./cursor.appimage --appimage-extract && \
-  mv squashfs-root /opt/cursor && \
-  ln -s /opt/cursor/cursor /usr/local/bin && \
-  ln -s /opt/cursor/cursor.desktop /usr/share/applications && \
-  sed -iE 's;Exec=.*;Exec=/usr/local/bin/cursor;' /opt/cursor/cursor.desktop && \
-  rm cursor.appimage
+# RUN wget -qnv -O cursor.appimage https://downloader.cursor.sh/linux/appImage/x64 && \
+#   chmod +x cursor.appimage && \
+#   ./cursor.appimage --appimage-extract && \
+#   mv squashfs-root /opt/cursor && \
+#   ln -s /opt/cursor/cursor /usr/local/bin && \
+#   ln -s /opt/cursor/cursor.desktop /usr/share/applications && \
+#   sed -iE 's;Exec=.*;Exec=/usr/local/bin/cursor;' /opt/cursor/cursor.desktop && \
+#   rm cursor.appimage
 
 # Install discord
-RUN wget -qnv -O discord.deb 'https://discordapp.com/api/download?platform=linux&format=deb' && \
-  dpkg -i discord.deb || apt-get install -qq --fix-broken && \
-  rm discord.deb
+# RUN wget -qnv -O discord.deb 'https://discordapp.com/api/download?platform=linux&format=deb' && \
+#   dpkg -i discord.deb || apt-get install -qq --fix-broken && \
+#   rm discord.deb
 
 # Install dive docker image explorer
-RUN wget -qnv -O dive.deb https://github.com/wagoodman/dive/releases/download/v0.9.2/dive_0.9.2_linux_amd64.deb && \
-  dpkg -i dive.deb && \
-  rm dive.deb
+# RUN wget -qnv -O dive.deb https://github.com/wagoodman/dive/releases/download/v0.9.2/dive_0.9.2_linux_amd64.deb && \
+#   dpkg -i dive.deb && \
+#   rm dive.deb
 
 # Install docker-compose
 RUN curl -fsSL "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
   chmod +x /usr/local/bin/docker-compose
 
 # Install dra
-RUN wget -qnv -O dra.deb https://github.com/devmatteini/dra/releases/download/0.6.2/dra_0.6.2-1_amd64.deb && \
-  dpkg -i dra.deb && \
-  rm dra.deb
+# RUN wget -qnv -O dra.deb https://github.com/devmatteini/dra/releases/download/0.6.2/dra_0.6.2-1_amd64.deb && \
+#   dpkg -i dra.deb && \
+#   rm dra.deb
 
 # Install dunst
 RUN apt-get update -qq && \
@@ -229,8 +229,8 @@ RUN apt-get update -qq && \
   make WAYLAND=0 install
 
 # Install eza
-RUN curl -fsSL https://github.com/eza-community/eza/releases/download/v0.20.2/eza_x86_64-unknown-linux-gnu.tar.gz | \
-  tar -C /usr/local/bin -xzf -
+# RUN curl -fsSL https://github.com/eza-community/eza/releases/download/v0.20.2/eza_x86_64-unknown-linux-gnu.tar.gz | \
+#   tar -C /usr/local/bin -xzf -
 
 # Install fastfetch
 RUN git clone https://github.com/fastfetch-cli/fastfetch /opt/fastfetch && \
@@ -242,15 +242,15 @@ RUN git clone https://github.com/fastfetch-cli/fastfetch /opt/fastfetch && \
   install fastfetch /usr/local/bin
 
 # Install fzf
-RUN curl -fsSL https://github.com/junegunn/fzf/releases/download/v0.55.0/fzf-0.55.0-linux_amd64.tar.gz | \
-  tar -C /usr/local/bin -xzf - fzf
+# RUN curl -fsSL https://github.com/junegunn/fzf/releases/download/v0.55.0/fzf-0.55.0-linux_amd64.tar.gz | \
+#   tar -C /usr/local/bin -xzf - fzf
 
 # Install gh
-RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
-  chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && \
-  echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main' | tee /etc/apt/sources.list.d/github-cli.list && \
-  apt-get update -qq && \
-  apt-get install -qq gh
+# RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
+#   chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && \
+#   echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main' | tee /etc/apt/sources.list.d/github-cli.list && \
+#   apt-get update -qq && \
+#   apt-get install -qq gh
 
 # Install gotop
 RUN git clone --depth 1 https://github.com/xxxserxxx/gotop /opt/gotop && \
@@ -335,12 +335,12 @@ RUN apt-get update -qq && \
   apt-get install -qq frei0r-plugins kde-style-breeze kdenlive knewstuff-dialog mediainfo --no-install-recommends
 
 # Install lazyvim
-RUN git clone --depth 1 https://github.com/LazyVim/starter $HOME/.config/nvim && \
-  rm -rf $HOME/.config/nvim/.git && \
-  curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')_Linux_x86_64.tar.gz" && \
-  tar xf lazygit.tar.gz lazygit && \
-  install lazygit /usr/local/bin && \
-  rm lazygit lazygit.tar.gz
+# RUN git clone --depth 1 https://github.com/LazyVim/starter $HOME/.config/nvim && \
+#   rm -rf $HOME/.config/nvim/.git && \
+#   curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')_Linux_x86_64.tar.gz" && \
+#   tar xf lazygit.tar.gz lazygit && \
+#   install lazygit /usr/local/bin && \
+#   rm lazygit lazygit.tar.gz
 
 # Install nerd fonts
 RUN wget -qnv https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/DejaVuSansMono.zip && \
@@ -354,7 +354,8 @@ RUN curl -fsSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc | tee /etc/apt/tru
   apt-get install -qq ngrok
 
 # Install nodejs
-RUN curl -fsSL https://nodejs.org/dist/v20.18.0/node-v20.18.0-linux-x64.tar.xz | \
+# RUN curl -fsSL https://nodejs.org/dist/v20.18.0/node-v20.18.0-linux-x64.tar.xz | \
+RUN curl -fsSL https://nodejs.org/dist/v20.18.0/node-v20.18.0-linux-$(uname -m).tar.xz | \
   tar -C /usr/local -Jx --strip-components=1
 
 # Install novnc
@@ -374,13 +375,13 @@ RUN mkdir /opt/nvm && \
   nvm install 18
 
 # Install op
-RUN curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg && \
-  echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' | tee /etc/apt/sources.list.d/1password.list && \
-  mkdir -p /etc/debsig/policies/AC2D62742012EA22 /usr/share/debsig/keyrings/AC2D62742012EA22 && \
-  curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | tee /etc/debsig/policies/AC2D62742012EA22/1password.pol && \
-  curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg && \
-  apt-get update -qq && \
-  apt-get install -qq 1password-cli
+# RUN curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg && \
+#   echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' | tee /etc/apt/sources.list.d/1password.list && \
+#   mkdir -p /etc/debsig/policies/AC2D62742012EA22 /usr/share/debsig/keyrings/AC2D62742012EA22 && \
+#   curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | tee /etc/debsig/policies/AC2D62742012EA22/1password.pol && \
+#   curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg && \
+#   apt-get update -qq && \
+#   apt-get install -qq 1password-cli
 
 # Install oxker
 RUN cargo install oxker
@@ -421,28 +422,28 @@ RUN apt-get update -qq && \
 RUN pipx install shell-gpt
 
 # Install slack
-RUN wget -qnv -O slack.deb https://downloads.slack-edge.com/desktop-releases/linux/x64/4.38.125/slack-desktop-4.38.125-amd64.deb && \
-  dpkg -i slack.deb && \
-  rm slack.deb
+# RUN wget -qnv -O slack.deb https://downloads.slack-edge.com/desktop-releases/linux/x64/4.38.125/slack-desktop-4.38.125-amd64.deb && \
+#   dpkg -i slack.deb && \
+#   rm slack.deb
 
 # Install speedtest
 RUN pipx install speedtest-cli
 
 # Install telegram
-RUN add-apt-repository ppa:atareao/telegram && \
-  apt-get update -qq && \
-  apt-get install -qq telegram
+# RUN add-apt-repository ppa:atareao/telegram && \
+#   apt-get update -qq && \
+#   apt-get install -qq telegram
 
 # Install terraform
-RUN wget -qnv -O terraform.zip https://releases.hashicorp.com/terraform/1.1.0/terraform_1.1.0_linux_amd64.zip && \
-  unzip terraform.zip && \
-  install terraform /usr/local/bin && \
-  rm terraform terraform.zip
+# RUN wget -qnv -O terraform.zip https://releases.hashicorp.com/terraform/1.1.0/terraform_1.1.0_linux_amd64.zip && \
+#   unzip terraform.zip && \
+#   install terraform /usr/local/bin && \
+#   rm terraform terraform.zip
 
 # Install thorium
-RUN echo 'deb [trusted=yes arch=amd64] https://dl.thorium.rocks/debian/ stable main' | tee /etc/apt/sources.list.d/thorium.list && \
-  apt-get update -qq && \
-  apt-get install -qq thorium-browser
+# RUN echo 'deb [trusted=yes arch=amd64] https://dl.thorium.rocks/debian/ stable main' | tee /etc/apt/sources.list.d/thorium.list && \
+#   apt-get update -qq && \
+#   apt-get install -qq thorium-browser
 
 # Install timeago
 RUN wget -qnv -O /usr/local/bin/timeago https://raw.githubusercontent.com/sabrehagen/timeago/master/timeago && \
@@ -455,16 +456,16 @@ RUN pipx install tldr
 RUN wget -qnv -O /usr/local/bin/tmpmail https://raw.githubusercontent.com/sdushantha/tmpmail/master/tmpmail && \
   chmod +x /usr/local/bin/tmpmail
 
-# Install tracexec
-RUN curl -fsSL https://github.com/kxxt/tracexec/releases/download/v0.5.2/tracexec-x86_64-unknown-linux-gnu.tar.gz | \
-  tar -C /usr/local/bin -xzf - tracexec
+# # Install tracexec
+# RUN curl -fsSL https://github.com/kxxt/tracexec/releases/download/v0.5.2/tracexec-x86_64-unknown-linux-gnu.tar.gz | \
+#   tar -C /usr/local/bin -xzf - tracexec
 
 # Install vs code, vs live share dependencies, shfmt extension dependency, and vs-wal
 RUN wget -qnv -O code.deb https://go.microsoft.com/fwlink/?LinkID=760868 && \
   apt-get install -qq ./code.deb && \
   rm code.deb && \
   apt-get install -qq libicu[0-9][0-9] libkrb5-3 zlib1g libsecret-1-0 desktop-file-utils x11-utils && \
-  wget -qnv -O /usr/local/bin/shfmt https://github.com/mvdan/sh/releases/download/v3.2.0/shfmt_v3.2.0_linux_amd64 && \
+  wget -qnv -O /usr/local/bin/shfmt https://github.com/mvdan/sh/releases/download/v3.2.0/shfmt_v3.2.0_linux_arm64 && \
   chmod +x /usr/local/bin/shfmt
 
 # Install warnai
