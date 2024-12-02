@@ -244,12 +244,12 @@ RUN git clone https://github.com/fastfetch-cli/fastfetch /opt/fastfetch && \
   install fastfetch /usr/local/bin
 
 # Install fzf
-RUN if [ "$(uname -m)" = "x86_64" ]; then \
-  curl -fsSL https://github.com/junegunn/fzf/releases/download/v0.55.0/fzf-0.55.0-linux_amd64.tar.gz | \
-  tar -C /usr/local/bin -xzf - fzf \
-  else \
-  echo "Unsupported architecture: $(uname -m)" && exit 1; \
-  fi
+# RUN if [ "$(uname -m)" = "x86_64" ]; then \
+#   curl -fsSL https://github.com/junegunn/fzf/releases/download/v0.55.0/fzf-0.55.0-linux_amd64.tar.gz | \
+#   tar -C /usr/local/bin -xzf - fzf \
+#   else \
+#   echo "Unsupported architecture: $(uname -m)" && exit 1; \
+#   fi
 # Install gh
 # RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
 #   chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && \
