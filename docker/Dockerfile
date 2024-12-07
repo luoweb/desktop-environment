@@ -60,7 +60,7 @@ RUN apt-get update -qq && \
   dbus-x11 \
   dnsmasq \
   dnsutils \
-  docker.io \
+  # docker.io \
   feh \
   ffmpeg \
   figlet \
@@ -68,7 +68,7 @@ RUN apt-get update -qq && \
   fonts-noto-color-emoji \
   g++ \
   gcc \
-  gimp \
+  # gimp \
   git \
   golang-go \
   grc \
@@ -100,7 +100,7 @@ RUN apt-get update -qq && \
   numlockx \
   nvtop \
   openssl \
-  openvpn \
+  # openvpn \
   pavucontrol-qt \
   pciutils \
   pcmanfm \
@@ -128,9 +128,9 @@ RUN apt-get update -qq && \
   tigervnc-standalone-server \
   tini \
   tmux \
-  transmission-cli \
-  transmission-common \
-  transmission-daemon \
+  # transmission-cli \
+  # transmission-common \
+  # transmission-daemon \
   tree \
   unclutter-xfixes \
   vcsh \
@@ -373,9 +373,9 @@ RUN git clone --depth 1 https://github.com/cloud-computer/noVNC.git /opt/noVNC &
   git clone --depth 1 https://github.com/novnc/websockify /opt/noVNC/utils/websockify
 
 # Install nvidia driver
-RUN apt-get update -qq && \
-  apt-get install -qq \
-  nvidia-cuda-toolkit nvidia-driver-535
+# RUN apt-get update -qq && \
+#   apt-get install -qq \
+#   nvidia-cuda-toolkit nvidia-driver-535
 
 # Install nvm
 RUN mkdir /opt/nvm && \
@@ -535,9 +535,9 @@ RUN git clone --depth 1 https://github.com/sabrehagen/vscode-wal /opt/vscode-wal
   yarn --cwd /opt/vscode-wal
 
 # Configure openvpn
-RUN mkdir -p $HOME/.config/openvpn && \
-  mknod $HOME/.config/openvpn/tun c 10 200 && \
-  chmod 600 $HOME/.config/openvpn/tun
+# RUN mkdir -p $HOME/.config/openvpn && \
+#   mknod $HOME/.config/openvpn/tun c 10 200 && \
+#   chmod 600 $HOME/.config/openvpn/tun
 
 # Configure password-less sudo for the sudo group
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers
