@@ -384,6 +384,11 @@ RUN mkdir /opt/nvm && \
   . /opt/nvm/nvm.sh && \
   nvm install 18
 
+# Install obsidian
+RUN wget -qnv -O obsidian.deb https://github.com/obsidianmd/obsidian-releases/releases/download/v1.7.7/obsidian_1.7.7_amd64.deb && \
+  dpkg -i obsidian.deb && \
+  rm obsidian.deb
+
 # Install op
 # RUN curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg && \
 #   echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' | tee /etc/apt/sources.list.d/1password.list && \
@@ -413,7 +418,7 @@ RUN pipx install pywal
 
 # Install screenpipe
 RUN apt-get update -qq && \
-  apt-get install -qq libasound2-dev libavdevice-dev libavfilter-dev libavformat-dev libtesseract-dev tesseract-ocr libxdo-dev libxtst-dev && \
+  apt-get install -qq libasound2-dev libavdevice-dev libavfilter-dev libavformat-dev libclang-16-dev libtesseract-dev tesseract-ocr libxdo-dev libxtst-dev && \
   git clone --depth 1 https://github.com/mediar-ai/screenpipe /opt/screenpipe && \
   cd /opt/screenpipe && \
   cargo build --release && \
@@ -483,14 +488,6 @@ RUN apt-get update -qq && \
   apt-get install -qq inkscape optipng xfconf libegl-dev libwayland-dev && \
   git clone --depth 1 https://github.com/reorr/warnai /opt/warnai && \
   sed -i '/notify-send/d' /opt/warnai/warnai
-
-# Install warpd
-RUN apt-get update -qq && \
-  apt-get install -qq libxtst-dev && \
-  git clone --depth 1 https://github.com/rvaiya/warpd /opt/warpd && \
-  cd /opt/warpd && \
-  make && \
-  make install
 
 # Install whatfiles
 RUN git clone --depth 1 https://github.com/spieglt/whatfiles /opt/whatfiles && \
