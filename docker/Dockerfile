@@ -1,17 +1,16 @@
-FROM ubuntu:25.04
+FROM ubuntu:24.04
 
 ARG DESKTOP_ENVIRONMENT_GITHUB_USER
 ARG DESKTOP_ENVIRONMENT_HOST_USER_PASSWORD
 ARG DESKTOP_ENVIRONMENT_USER
 
-ENV DESKTOP_ENVIRONMENT_HOST_USER_PASSWORD $DESKTOP_ENVIRONMENT_HOST_USER_PASSWORD
-ENV EDITOR nano
-ENV LANG en_US.UTF-8
-ENV LC_ALL $LANG
-ENV SHELL /bin/zsh
-ENV TERM xterm-256color
-ENV TZ Australia/Sydney
-ENV USER $DESKTOP_ENVIRONMENT_USER
+ENV DESKTOP_ENVIRONMENT_HOST_USER_PASSWORD=$DESKTOP_ENVIRONMENT_HOST_USER_PASSWORD
+ENV EDITOR=nano
+ENV LC_ALL=en_US.UTF-8
+ENV SHELL=/bin/zsh
+ENV TERM=xterm-256color
+ENV TZ=Australia/Sydney
+ENV USER=$DESKTOP_ENVIRONMENT_USER
 
 ENV HOME /home/$USER
 
@@ -28,8 +27,8 @@ RUN apt-get update -qq && \
   tzdata
 
 # Generate locales
-RUN locale-gen $LANG && \
-  update-locale LANG=$LANG LC_ALL=$LC_ALL && \
+RUN locale-gen $LC_ALL && \
+  update-locale LC_ALL=$LC_ALL && \
   dpkg-reconfigure --frontend=noninteractive locales
 
 # Set timezone
@@ -60,7 +59,8 @@ RUN apt-get update -qq && \
   dbus-x11 \
   dnsmasq \
   dnsutils \
-  # docker.io \
+  docker-compose-v2 \
+  docker.io \
   feh \
   ffmpeg \
   figlet \
@@ -81,6 +81,7 @@ RUN apt-get update -qq && \
   jq \
   keychain \
   ksnip \
+  libappindicator3-dev \
   libnotify-bin \
   libnss3-tools \
   libssl-dev \
@@ -105,6 +106,7 @@ RUN apt-get update -qq && \
   pciutils \
   pcmanfm \
   perl \
+  pipewire \
   pipx \
   pkg-config \
   pulseaudio \
@@ -147,13 +149,18 @@ RUN apt-get update -qq && \
   xsel \
   xserver-xorg \
   xterm \
+  yq \
   zathura \
   zsh && \
   apt-file update
 
+# If the CACHEBUST_APPS build arg is supplied, rebuild from apps onwards
+ARG CACHEBUST_APPS
+RUN echo 'Building from apps onwards...'
+
 # Install rust
 RUN apt-get update -qq && \
-  curl https://sh.rustup.rs -sSf | sh -s -- -y --no-modify-path --profile minimal && \
+  curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain nightly --no-modify-path --profile minimal && \
   ln -s $HOME/.cargo/bin/cargo /usr/local/bin && \
   ln -s $HOME/.cargo/bin/rustup /usr/local/bin && \
   rustup install 1.79.0
@@ -170,8 +177,8 @@ RUN apt-get install -qq libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev l
   cargo clean
 
 # Install arc
-# RUN wget -qnv -O /usr/local/bin/arc https://github.com/mholt/archiver/releases/download/v3.5.0/arc_3.5.0_linux_amd64 && \
-#   chmod +x /usr/local/bin/arc
+RUN curl -fsSL -o /usr/local/bin/arc https://github.com/mholt/archiver/releases/download/v3.5.0/arc_3.5.0_linux_amd64 && \
+  chmod +x /usr/local/bin/arc
 
 # Install aws cli
 # RUN curl -fsSL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip && \
@@ -184,34 +191,35 @@ RUN apt-get install -qq libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev l
 #   tar -C /usr/local/bin -xzf - bandwhich
 
 # Install beekeeper studio
-# RUN wget -qnv -O beekeeper-studio.deb https://github.com/beekeeper-studio/beekeeper-studio/releases/download/v3.7.10/beekeeper-studio_3.7.10_amd64.deb && \
-#   dpkg -i beekeeper-studio.deb && \
-#   rm beekeeper-studio.deb
+
+RUN curl -fsSL -o beekeeper-studio.deb https://github.com/beekeeper-studio/beekeeper-studio/releases/download/v3.7.10/beekeeper-studio_3.7.10_amd64.deb && \
+  dpkg -i beekeeper-studio.deb && \
+  rm beekeeper-studio.deb
 
 # Install bottom
-# RUN wget -qnv -O bottom.deb https://github.com/ClementTsang/bottom/releases/download/0.10.2/bottom_0.10.2-1_amd64.deb && \
-#   dpkg -i bottom.deb && \
-#   rm bottom.deb
+RUN curl -fsSL -o bottom.deb https://github.com/ClementTsang/bottom/releases/download/0.10.2/bottom_0.10.2-1_amd64.deb && \
+  dpkg -i bottom.deb && \
+  rm bottom.deb
 
 # Install cursor
-# RUN wget -qnv -O cursor.appimage https://downloader.cursor.sh/linux/appImage/x64 && \
-#   chmod +x cursor.appimage && \
-#   ./cursor.appimage --appimage-extract && \
-#   mv squashfs-root /opt/cursor && \
-#   ln -s /opt/cursor/cursor /usr/local/bin && \
-#   ln -s /opt/cursor/cursor.desktop /usr/share/applications && \
-#   sed -iE 's;Exec=.*;Exec=/usr/local/bin/cursor;' /opt/cursor/cursor.desktop && \
-#   rm cursor.appimage
+RUN curl -fsSL -o cursor.appimage https://downloader.cursor.sh/linux/appImage/x64 && \
+  chmod +x cursor.appimage && \
+  ./cursor.appimage --appimage-extract && \
+  mv squashfs-root /opt/cursor && \
+  ln -s /opt/cursor/cursor /usr/local/bin && \
+  ln -s /opt/cursor/cursor.desktop /usr/share/applications && \
+  sed -iE 's;Exec=.*;Exec=/usr/local/bin/cursor;' /opt/cursor/cursor.desktop && \
+  rm cursor.appimage
 
 # Install discord
-# RUN wget -qnv -O discord.deb 'https://discordapp.com/api/download?platform=linux&format=deb' && \
-#   dpkg -i discord.deb || apt-get install -qq --fix-broken && \
-#   rm discord.deb
+RUN curl -fsSL -o discord.deb 'https://discordapp.com/api/download?platform=linux&format=deb' && \
+  dpkg -i discord.deb || apt-get install -qq --fix-broken && \
+  rm discord.deb
 
 # Install dive docker image explorer
-# RUN wget -qnv -O dive.deb https://github.com/wagoodman/dive/releases/download/v0.9.2/dive_0.9.2_linux_amd64.deb && \
-#   dpkg -i dive.deb && \
-#   rm dive.deb
+RUN curl -fsSL -o dive.deb https://github.com/wagoodman/dive/releases/download/v0.9.2/dive_0.9.2_linux_amd64.deb && \
+  dpkg -i dive.deb && \
+  rm dive.deb
 
 # Install docker-compose
 RUN curl -fsSL "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
@@ -348,7 +356,7 @@ RUN apt-get update -qq && \
 #   rm lazygit lazygit.tar.gz
 
 # Install nerd fonts
-RUN wget -qnv https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/DejaVuSansMono.zip && \
+RUN curl -fsSL -o DejaVuSansMono.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/DejaVuSansMono.zip && \
   unzip -p DejaVuSansMono.zip DejaVuSansMNerdFont-Regular.ttf > /usr/share/fonts/truetype/dejavu/DejaVuSansMNerdFont-Regular.ttf && \
   rm DejaVuSansMono.zip
 
@@ -374,18 +382,26 @@ RUN git clone --depth 1 https://github.com/cloud-computer/noVNC.git /opt/noVNC &
 
 # Install nvidia driver
 # RUN apt-get update -qq && \
-#   apt-get install -qq \
-#   nvidia-cuda-toolkit nvidia-driver-535
+#   apt-get install linux-headers-$(uname -r) && \
+#   curl -fsSL -o nvidia-driver.run https://us.download.nvidia.com/XFree86/Linux-x86_64/565.77/NVIDIA-Linux-x86_64-565.77.run && \
+#   chmod +x nvidia-driver.run && \
+#   ./nvidia-driver.run --allow-installation-with-running-driver --silent && \
+#   rm nviia-driver.run
+
+# Install nvidia driver
+RUN apt-get update -qq && \
+  apt-get install -qq \
+  nvidia-cuda-toolkit
 
 # Install nvm
 RUN mkdir /opt/nvm && \
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | \
   NVM_DIR=/opt/nvm bash && \
   . /opt/nvm/nvm.sh && \
-  nvm install 18
+  nvm install 20
 
 # Install obsidian
-RUN wget -qnv -O obsidian.deb https://github.com/obsidianmd/obsidian-releases/releases/download/v1.7.7/obsidian_1.7.7_amd64.deb && \
+RUN curl -fsSL -o obsidian.deb https://github.com/obsidianmd/obsidian-releases/releases/download/v1.7.7/obsidian_1.7.7_amd64.deb && \
   dpkg -i obsidian.deb && \
   rm obsidian.deb
 
@@ -417,43 +433,45 @@ RUN pipx install posting
 RUN pipx install pywal
 
 # Install screenpipe
-RUN apt-get update -qq && \
-  apt-get install -qq libasound2-dev libavdevice-dev libavfilter-dev libavformat-dev libclang-16-dev libtesseract-dev tesseract-ocr libxdo-dev libxtst-dev && \
-  git clone --depth 1 https://github.com/mediar-ai/screenpipe /opt/screenpipe && \
-  cd /opt/screenpipe && \
-  cargo build --release && \
-  install target/release/screenpipe /usr/local/bin
+# RUN apt-get update -qq && \
+#   apt-get install -qq libasound2-dev libavdevice-dev libavfilter-dev libavformat-dev libclang-16-dev libtesseract-dev tesseract-ocr libxdo-dev libxtst-dev && \
+#   git clone --depth 1 https://github.com/mediar-ai/screenpipe /opt/screenpipe && \
+#   cd /opt/screenpipe && \
+#   cargo build --release && \
+#   install target/release/screenpipe /usr/local/bin
 
 # Install screenpipe ui
-RUN apt-get update -qq && \
-  apt-get install -qq libappindicator3-dev && \
-  cd /opt/screenpipe/screenpipe-app-tauri && \
-  npm install bun && \
-  npx bun install && \
-  npx bun scripts/pre_build.js >/dev/null && \
-  PATH=$HOME/.cargo/bin:$PATH npx bun tauri build || true
+# RUN apt-get update -qq && \
+#   apt-get install -qq libappindicator3-dev && \
+#   cd /opt/screenpipe/screenpipe-app-tauri && \
+#   npm install bun && \
+#   npx bun install && \
+#   npx bun scripts/pre_build.js >/dev/null && \
+#   PATH=$HOME/.cargo/bin:$PATH npx bun tauri build || true
 
 # Install shell chatgpt
 RUN pipx install shell-gpt
 
 # Install slack
-# RUN wget -qnv -O slack.deb https://downloads.slack-edge.com/desktop-releases/linux/x64/4.38.125/slack-desktop-4.38.125-amd64.deb && \
-#   dpkg -i slack.deb && \
-#   rm slack.deb
+
+RUN curl -fsSL -o slack.deb https://downloads.slack-edge.com/desktop-releases/linux/x64/4.38.125/slack-desktop-4.38.125-amd64.deb && \
+  dpkg -i slack.deb && \
+  rm slack.deb
 
 # Install speedtest
 RUN pipx install speedtest-cli
 
 # Install telegram
-# RUN add-apt-repository ppa:atareao/telegram && \
-#   apt-get update -qq && \
-#   apt-get install -qq telegram
+RUN add-apt-repository ppa:atareao/telegram && \
+  apt-get update -qq && \
+  apt-get install -qq telegram
 
 # Install terraform
-# RUN wget -qnv -O terraform.zip https://releases.hashicorp.com/terraform/1.1.0/terraform_1.1.0_linux_amd64.zip && \
-#   unzip terraform.zip && \
-#   install terraform /usr/local/bin && \
-#   rm terraform terraform.zip
+
+RUN curl -fsSL -o terraform.zip https://releases.hashicorp.com/terraform/1.1.0/terraform_1.1.0_linux_amd64.zip && \
+  unzip terraform.zip && \
+  install terraform /usr/local/bin && \
+  rm terraform terraform.zip
 
 # Install thorium
 # RUN echo 'deb [trusted=yes arch=amd64] https://dl.thorium.rocks/debian/ stable main' | tee /etc/apt/sources.list.d/thorium.list && \
@@ -461,26 +479,30 @@ RUN pipx install speedtest-cli
 #   apt-get install -qq thorium-browser
 
 # Install timeago
-RUN wget -qnv -O /usr/local/bin/timeago https://raw.githubusercontent.com/sabrehagen/timeago/master/timeago && \
+RUN curl -fsSL -o /usr/local/bin/timeago https://raw.githubusercontent.com/sabrehagen/timeago/master/timeago && \
   chmod +x /usr/local/bin/timeago
 
 # Install tldr
-RUN pipx install tldr
+RUN pipx install tldr && \
+  pipx run tldr --update
 
 # Install tmpmail
-RUN wget -qnv -O /usr/local/bin/tmpmail https://raw.githubusercontent.com/sdushantha/tmpmail/master/tmpmail && \
+RUN curl -fsSL -o /usr/local/bin/tmpmail https://raw.githubusercontent.com/sdushantha/tmpmail/master/tmpmail && \
   chmod +x /usr/local/bin/tmpmail
 
 # # Install tracexec
 # RUN curl -fsSL https://github.com/kxxt/tracexec/releases/download/v0.5.2/tracexec-x86_64-unknown-linux-gnu.tar.gz | \
 #   tar -C /usr/local/bin -xzf - tracexec
 
+# Install trippy
+RUN cargo install trippy --locked
+
 # Install vs code, vs live share dependencies, shfmt extension dependency, and vs-wal
-RUN wget -qnv -O code.deb https://go.microsoft.com/fwlink/?LinkID=760868 && \
+RUN curl -fsSL -o code.deb https://go.microsoft.com/fwlink/?LinkID=760868 && \
   apt-get install -qq ./code.deb && \
   rm code.deb && \
   apt-get install -qq libicu[0-9][0-9] libkrb5-3 zlib1g libsecret-1-0 desktop-file-utils x11-utils && \
-  wget -qnv -O /usr/local/bin/shfmt https://github.com/mvdan/sh/releases/download/v3.2.0/shfmt_v3.2.0_linux_arm64 && \
+  curl -fsSL -o /usr/local/bin/shfmt https://github.com/mvdan/sh/releases/download/v3.2.0/shfmt_v3.2.0_linux_amd64 && \
   chmod +x /usr/local/bin/shfmt
 
 # Install warnai
@@ -494,6 +516,12 @@ RUN git clone --depth 1 https://github.com/spieglt/whatfiles /opt/whatfiles && \
   cd /opt/whatfiles && \
   make && \
   make install
+
+# Install windsurf
+RUN curl -fsSL https://windsurf-stable.codeiumdata.com/wVxQEIWkwPUEAGf3/windsurf.gpg | gpg --dearmor -o /usr/share/keyrings/windsurf-stable-archive-keyring.gpg && \
+  echo 'deb [signed-by=/usr/share/keyrings/windsurf-stable-archive-keyring.gpg arch=amd64] https://windsurf-stable.codeiumdata.com/wVxQEIWkwPUEAGf3/apt stable main' | tee /etc/apt/sources.list.d/windsurf.list > /dev/null && \
+  apt-get update -qq && \
+  apt-get install -qq windsurf
 
 # Install xava
 # RUN apt-get update -qq && \
@@ -528,7 +556,8 @@ RUN yarn global add \
   http-server \
   imgur-uploader-cli \
   nodemon \
-  rebase-editor
+  rebase-editor \
+  vercel
 
 # Install vs code wal theme
 RUN git clone --depth 1 https://github.com/sabrehagen/vscode-wal /opt/vscode-wal && \
@@ -570,9 +599,9 @@ WORKDIR $HOME
 # Clone the desktop environment
 RUN git clone https://github.com/sabrehagen/desktop-environment /opt/desktop-environment
 
-# If the DOTFILES_CACHEBUST build arg is supplied, rebuild from static dotfiles onwards
-ARG DOTFILES_CACHEBUST
-RUN DOTFILES_CACHEBUST=$DOTFILES_CACHEBUST echo 'Building from dotfiles...'
+# If the CACHEBUST_DOTFILES build arg is supplied, rebuild from static dotfiles onwards
+ARG CACHEBUST_DOTFILES
+RUN echo 'Building from dotfiles...'
 
 # Clone user dotfiles or fallback to sabrehagen dotfiles
 RUN vcsh clone https://github.com/sabrehagen/dotfiles
