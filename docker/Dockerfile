@@ -38,6 +38,8 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
 # Install desktop environment core utilities
 RUN apt-get update -qq && \
   DEBIAN_FRONTEND=noninteractive apt-get install -qq --fix-missing \
+  clang \
+  libclang-dev \
   acpi \
   alsa-utils \
   apt-file \
@@ -66,7 +68,7 @@ RUN apt-get update -qq && \
   fonts-noto-color-emoji \
   g++ \
   gcc \
-  gimp \
+  # gimp \
   git \
   golang-go \
   grc \
@@ -99,7 +101,7 @@ RUN apt-get update -qq && \
   numlockx \
   nvtop \
   openssl \
-  openvpn \
+  # openvpn \
   pavucontrol-qt \
   pciutils \
   pcmanfm \
@@ -128,9 +130,9 @@ RUN apt-get update -qq && \
   tigervnc-standalone-server \
   tini \
   tmux \
-  transmission-cli \
-  transmission-common \
-  transmission-daemon \
+  # transmission-cli \
+  # transmission-common \
+  # transmission-daemon \
   tree \
   unclutter-xfixes \
   vcsh \
@@ -179,16 +181,17 @@ RUN curl -fsSL -o /usr/local/bin/arc https://github.com/mholt/archiver/releases/
   chmod +x /usr/local/bin/arc
 
 # Install aws cli
-RUN curl -fsSL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip && \
-  unzip awscliv2.zip && \
-  ./aws/install && \
-  rm -rf aws awscliv2.zip
+# RUN curl -fsSL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip && \
+#   unzip awscliv2.zip && \
+#   ./aws/install && \
+#   rm -rf aws awscliv2.zip
 
 # Install bandwhich
-RUN curl -fsSL https://github.com/imsnif/bandwhich/releases/download/0.20.0/bandwhich-v0.20.0-x86_64-unknown-linux-musl.tar.gz | \
-  tar -C /usr/local/bin -xzf - bandwhich
+# RUN curl -fsSL https://github.com/imsnif/bandwhich/releases/download/0.20.0/bandwhich-v0.20.0-x86_64-unknown-linux-musl.tar.gz | \
+#   tar -C /usr/local/bin -xzf - bandwhich
 
 # Install beekeeper studio
+
 RUN curl -fsSL -o beekeeper-studio.deb https://github.com/beekeeper-studio/beekeeper-studio/releases/download/v3.7.10/beekeeper-studio_3.7.10_amd64.deb && \
   dpkg -i beekeeper-studio.deb && \
   rm beekeeper-studio.deb
@@ -223,9 +226,9 @@ RUN curl -fsSL "https://github.com/docker/compose/releases/download/v2.27.1/dock
   chmod +x /usr/local/bin/docker-compose
 
 # Install dra
-RUN wget -qnv -O dra.deb https://github.com/devmatteini/dra/releases/download/0.6.2/dra_0.6.2-1_amd64.deb && \
-  dpkg -i dra.deb && \
-  rm dra.deb
+# RUN wget -qnv -O dra.deb https://github.com/devmatteini/dra/releases/download/0.6.2/dra_0.6.2-1_amd64.deb && \
+#   dpkg -i dra.deb && \
+#   rm dra.deb
 
 # Install dunst
 RUN apt-get update -qq && \
@@ -236,8 +239,8 @@ RUN apt-get update -qq && \
   make WAYLAND=0 install
 
 # Install eza
-RUN curl -fsSL https://github.com/eza-community/eza/releases/download/v0.20.2/eza_x86_64-unknown-linux-gnu.tar.gz | \
-  tar -C /usr/local/bin -xzf -
+# RUN curl -fsSL https://github.com/eza-community/eza/releases/download/v0.20.2/eza_x86_64-unknown-linux-gnu.tar.gz | \
+#   tar -C /usr/local/bin -xzf -
 
 # Install fastfetch
 RUN git clone https://github.com/fastfetch-cli/fastfetch /opt/fastfetch && \
@@ -249,15 +252,18 @@ RUN git clone https://github.com/fastfetch-cli/fastfetch /opt/fastfetch && \
   install fastfetch /usr/local/bin
 
 # Install fzf
-RUN curl -fsSL https://github.com/junegunn/fzf/releases/download/v0.55.0/fzf-0.55.0-linux_amd64.tar.gz | \
-  tar -C /usr/local/bin -xzf - fzf
-
+# RUN if [ "$(uname -m)" = "x86_64" ]; then \
+#   curl -fsSL https://github.com/junegunn/fzf/releases/download/v0.55.0/fzf-0.55.0-linux_amd64.tar.gz | \
+#   tar -C /usr/local/bin -xzf - fzf \
+#   else \
+#   echo "Unsupported architecture: $(uname -m)" && exit 1; \
+#   fi
 # Install gh
-RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
-  chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && \
-  echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main' | tee /etc/apt/sources.list.d/github-cli.list && \
-  apt-get update -qq && \
-  apt-get install -qq gh
+# RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
+#   chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && \
+#   echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main' | tee /etc/apt/sources.list.d/github-cli.list && \
+#   apt-get update -qq && \
+#   apt-get install -qq gh
 
 # Install gotop
 RUN git clone --depth 1 https://github.com/xxxserxxx/gotop /opt/gotop && \
@@ -342,12 +348,12 @@ RUN apt-get update -qq && \
   apt-get install -qq frei0r-plugins kde-style-breeze kdenlive knewstuff-dialog mediainfo --no-install-recommends
 
 # Install lazyvim
-RUN git clone --depth 1 https://github.com/LazyVim/starter $HOME/.config/nvim && \
-  rm -rf $HOME/.config/nvim/.git && \
-  curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')_Linux_x86_64.tar.gz" && \
-  tar xf lazygit.tar.gz lazygit && \
-  install lazygit /usr/local/bin && \
-  rm lazygit lazygit.tar.gz
+# RUN git clone --depth 1 https://github.com/LazyVim/starter $HOME/.config/nvim && \
+#   rm -rf $HOME/.config/nvim/.git && \
+#   curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')_Linux_x86_64.tar.gz" && \
+#   tar xf lazygit.tar.gz lazygit && \
+#   install lazygit /usr/local/bin && \
+#   rm lazygit lazygit.tar.gz
 
 # Install nerd fonts
 RUN curl -fsSL -o DejaVuSansMono.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/DejaVuSansMono.zip && \
@@ -361,8 +367,14 @@ RUN curl -fsSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc | tee /etc/apt/tru
   apt-get install -qq ngrok
 
 # Install nodejs
-RUN curl -fsSL https://nodejs.org/dist/v20.18.0/node-v20.18.0-linux-x64.tar.xz | \
-  tar -C /usr/local -Jx --strip-components=1
+# RUN curl -fsSL https://nodejs.org/dist/v20.18.0/node-v20.18.0-linux-x64.tar.xz | \
+RUN if [ "$(uname -m)" = "x86_64" ]; then \
+  curl -fsSL https://nodejs.org/dist/v20.18.0/node-v20.18.0-linux-x64.tar.xz | tar -C /usr/local -Jx --strip-components=1; \
+  elif [ "$(uname -m)" = "aarch64" ]; then \
+  curl -fsSL https://nodejs.org/dist/v20.18.0/node-v20.18.0-linux-arm64.tar.xz | tar -C /usr/local -Jx --strip-components=1; \
+  else \
+  echo "Unsupported architecture: $(uname -m)" && exit 1; \
+  fi
 
 # Install novnc
 RUN git clone --depth 1 https://github.com/cloud-computer/noVNC.git /opt/noVNC && \
@@ -394,13 +406,13 @@ RUN curl -fsSL -o obsidian.deb https://github.com/obsidianmd/obsidian-releases/r
   rm obsidian.deb
 
 # Install op
-RUN curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg && \
-  echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' | tee /etc/apt/sources.list.d/1password.list && \
-  mkdir -p /etc/debsig/policies/AC2D62742012EA22 /usr/share/debsig/keyrings/AC2D62742012EA22 && \
-  curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | tee /etc/debsig/policies/AC2D62742012EA22/1password.pol && \
-  curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg && \
-  apt-get update -qq && \
-  apt-get install -qq 1password-cli
+# RUN curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg && \
+#   echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' | tee /etc/apt/sources.list.d/1password.list && \
+#   mkdir -p /etc/debsig/policies/AC2D62742012EA22 /usr/share/debsig/keyrings/AC2D62742012EA22 && \
+#   curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | tee /etc/debsig/policies/AC2D62742012EA22/1password.pol && \
+#   curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg && \
+#   apt-get update -qq && \
+#   apt-get install -qq 1password-cli
 
 # Install oxker
 RUN cargo install oxker
@@ -441,6 +453,7 @@ RUN pipx install pywal
 RUN pipx install shell-gpt
 
 # Install slack
+
 RUN curl -fsSL -o slack.deb https://downloads.slack-edge.com/desktop-releases/linux/x64/4.38.125/slack-desktop-4.38.125-amd64.deb && \
   dpkg -i slack.deb && \
   rm slack.deb
@@ -454,15 +467,16 @@ RUN add-apt-repository ppa:atareao/telegram && \
   apt-get install -qq telegram
 
 # Install terraform
+
 RUN curl -fsSL -o terraform.zip https://releases.hashicorp.com/terraform/1.1.0/terraform_1.1.0_linux_amd64.zip && \
   unzip terraform.zip && \
   install terraform /usr/local/bin && \
   rm terraform terraform.zip
 
 # Install thorium
-RUN echo 'deb [trusted=yes arch=amd64] https://dl.thorium.rocks/debian/ stable main' | tee /etc/apt/sources.list.d/thorium.list && \
-  apt-get update -qq && \
-  apt-get install -qq thorium-browser
+# RUN echo 'deb [trusted=yes arch=amd64] https://dl.thorium.rocks/debian/ stable main' | tee /etc/apt/sources.list.d/thorium.list && \
+#   apt-get update -qq && \
+#   apt-get install -qq thorium-browser
 
 # Install timeago
 RUN curl -fsSL -o /usr/local/bin/timeago https://raw.githubusercontent.com/sabrehagen/timeago/master/timeago && \
@@ -476,9 +490,9 @@ RUN pipx install tldr && \
 RUN curl -fsSL -o /usr/local/bin/tmpmail https://raw.githubusercontent.com/sdushantha/tmpmail/master/tmpmail && \
   chmod +x /usr/local/bin/tmpmail
 
-# Install tracexec
-RUN curl -fsSL https://github.com/kxxt/tracexec/releases/download/v0.5.2/tracexec-x86_64-unknown-linux-gnu.tar.gz | \
-  tar -C /usr/local/bin -xzf - tracexec
+# # Install tracexec
+# RUN curl -fsSL https://github.com/kxxt/tracexec/releases/download/v0.5.2/tracexec-x86_64-unknown-linux-gnu.tar.gz | \
+#   tar -C /usr/local/bin -xzf - tracexec
 
 # Install trippy
 RUN cargo install trippy --locked
@@ -550,9 +564,9 @@ RUN git clone --depth 1 https://github.com/sabrehagen/vscode-wal /opt/vscode-wal
   yarn --cwd /opt/vscode-wal
 
 # Configure openvpn
-RUN mkdir -p $HOME/.config/openvpn && \
-  mknod $HOME/.config/openvpn/tun c 10 200 && \
-  chmod 600 $HOME/.config/openvpn/tun
+# RUN mkdir -p $HOME/.config/openvpn && \
+#   mknod $HOME/.config/openvpn/tun c 10 200 && \
+#   chmod 600 $HOME/.config/openvpn/tun
 
 # Configure password-less sudo for the sudo group
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers

@@ -3,15 +3,32 @@ on: [push, workflow_call]
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      PLATFORMS: linux/amd64,linux/arm64
     permissions:
       packages: write
     steps:
-
+      # - uses: AutoModality/action-clean@v1
+      - name: Clean docker image cache
+        shell: bash
+        # if: ${{ github.repository == 'luoweb/inference' }}
+        run: |
+          df -h
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          df -h
       - name: Check out repository
         uses: actions/checkout@v3
 
       - name: Sanitise repository owner
         run: echo REPOSITORY_OWNER=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]') >> $GITHUB_ENV
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@master
+        with:
+          platforms: all
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -31,6 +48,7 @@ jobs:
             DESKTOP_ENVIRONMENT_GITHUB_USER=${{ env.REPOSITORY_OWNER }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          platforms: ${{ env.PLATFORMS }}
           file: docker/Dockerfile
           push: true
           tags: ghcr.io/${{ env.REPOSITORY_OWNER }}/desktop-environment:latest
