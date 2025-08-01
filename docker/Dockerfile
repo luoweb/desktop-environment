@@ -74,6 +74,7 @@ RUN apt-get update -qq && \
   gtk+3.0 \
   htop \
   iftop \
+  imv \
   initramfs-tools \
   iputils-ping \
   jq \
@@ -207,11 +208,11 @@ RUN apt-get update -qq && \
   make install
 
 # Install cursor
-RUN curl -fsSL -o cursor.appimage https://downloader.cursor.sh/linux/appImage/x64 && \
+RUN curl -fsSL -o cursor.appimage https://downloads.cursor.com/production/61e99179e4080fecf9d8b92c6e2e3e00fbfb53f4/linux/x64/Cursor-0.48.9-x86_64.AppImage && \
   chmod +x cursor.appimage && \
   ./cursor.appimage --appimage-extract && \
   mv squashfs-root /opt/cursor && \
-  ln -s /opt/cursor/cursor /usr/local/bin && \
+  ln -s /opt/cursor/usr/bin/cursor /usr/local/bin && \
   ln -s /opt/cursor/cursor.desktop /usr/share/applications && \
   sed -iE 's;Exec=.*;Exec=/usr/local/bin/cursor;' /opt/cursor/cursor.desktop && \
   rm cursor.appimage
@@ -356,6 +357,11 @@ RUN git clone --depth 1 https://github.com/LazyVim/starter $HOME/.config/nvim &&
   tar xf lazygit.tar.gz lazygit && \
   install lazygit /usr/local/bin && \
   rm lazygit lazygit.tar.gz
+
+# Install musikcube
+RUN wget -O musikcube.deb -nv https://github.com/clangen/musikcube/releases/download/3.0.4/musikcube_3.0.4_linux_x86_64.deb && \
+  dpkg -i musikcube.deb || apt-get install -qq --fix-broken && \
+  rm musikcube.deb
 
 # Install nerd fonts
 RUN curl -fsSL -o DejaVuSansMono.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/DejaVuSansMono.zip && \
@@ -547,6 +553,9 @@ RUN curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
 
 # Install yarn based utilities
 RUN yarn global add \
+  @anthropic-ai/claude-code \
+  @openai/codex \
+  @sourcegraph/amp \
   aicommit2 \
   clipboard-cli \
   diff-so-fancy \

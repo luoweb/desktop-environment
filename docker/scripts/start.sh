@@ -4,7 +4,7 @@ REPO_ROOT=$(dirname $(readlink -f $0))/../..
 eval "$($REPO_ROOT/docker/scripts/environment.sh)"
 
 # Ensure the desktop environment network exists
-docker network create $DESKTOP_ENVIRONMENT_DOCKER_NETWORK
+docker network create $DESKTOP_ENVIRONMENT_DOCKER_NETWORK 2>/dev/null
 
 # Start the desktop environment container
 docker run \
@@ -20,6 +20,7 @@ docker run \
   --device /dev/input \
   --device /dev/snd \
   --device /dev/tty$DESKTOP_ENVIRONMENT_TTY \
+  --device /dev/uinput \
   --device /dev/video0 \
   --env DESKTOP_ENVIRONMENT_GITHUB_TOKEN \
   --env DESKTOP_ENVIRONMENT_TTY \
@@ -42,7 +43,6 @@ docker run \
   --publish 8822:22 \
   --rm \
   --security-opt apparmor:unconfined \
-  --volume /etc/hosts:/etc/hosts \
   --volume /dev/displaylink:/dev/displaylink \
   --volume /dev/shm:/dev/shm \
   --volume /mnt/mmc:/mnt/mmc \
@@ -62,7 +62,8 @@ docker run \
   --volume DESKTOP_ENVIRONMENT_CACHE_ZSH:$DESKTOP_ENVIRONMENT_CACHE_ZSH \
   --volume DESKTOP_ENVIRONMENT_STATE_BEEKEEPER:$DESKTOP_ENVIRONMENT_STATE_BEEKEEPER \
   --volume DESKTOP_ENVIRONMENT_STATE_CHATGPT:$DESKTOP_ENVIRONMENT_STATE_CHATGPT \
-  --volume DESKTOP_ENVIRONMENT_STATE_CLAUDEAI:$DESKTOP_ENVIRONMENT_STATE_CLAUDEAI \
+  --volume DESKTOP_ENVIRONMENT_STATE_CLAUDE_CHAT:$DESKTOP_ENVIRONMENT_STATE_CLAUDE_CHAT \
+  --volume DESKTOP_ENVIRONMENT_STATE_CLAUDE_CODE:$DESKTOP_ENVIRONMENT_STATE_CLAUDE_CODE \
   --volume DESKTOP_ENVIRONMENT_STATE_CODE:$DESKTOP_ENVIRONMENT_STATE_CODE \
   --volume DESKTOP_ENVIRONMENT_STATE_CURSOR:$DESKTOP_ENVIRONMENT_STATE_CURSOR \
   --volume DESKTOP_ENVIRONMENT_STATE_DISCORD:$DESKTOP_ENVIRONMENT_STATE_DISCORD \
@@ -70,6 +71,7 @@ docker run \
   --volume DESKTOP_ENVIRONMENT_STATE_JUMP:$DESKTOP_ENVIRONMENT_STATE_JUMP \
   --volume DESKTOP_ENVIRONMENT_STATE_KDENLIVE:$DESKTOP_ENVIRONMENT_STATE_KDENLIVE \
   --volume DESKTOP_ENVIRONMENT_STATE_KEYRING:$DESKTOP_ENVIRONMENT_STATE_KEYRING \
+  --volume DESKTOP_ENVIRONMENT_STATE_MUSIKCUBE:$DESKTOP_ENVIRONMENT_STATE_MUSIKCUBE \
   --volume DESKTOP_ENVIRONMENT_STATE_OBSIDIAN:$DESKTOP_ENVIRONMENT_STATE_OBSIDIAN \
   --volume DESKTOP_ENVIRONMENT_STATE_SCREENPIPE:$DESKTOP_ENVIRONMENT_STATE_SCREENPIPE \
   --volume DESKTOP_ENVIRONMENT_STATE_SIGNAL:$DESKTOP_ENVIRONMENT_STATE_SIGNAL \
@@ -91,4 +93,4 @@ docker run \
   $DESKTOP_ENVIRONMENT_REGISTRY/$DESKTOP_ENVIRONMENT_CONTAINER_IMAGE:$DESKTOP_ENVIRONMENT_CONTAINER_TAG
 
 # Wait until the desktop environment container is running before proceeding
-until docker inspect $DESKTOP_ENVIRONMENT_CONTAINER_NAME | grep Status | grep -m 1 running >/dev/null; do sleep 1; done
+until docker inspect $DESKTOP_ENVIRONMENT_CONTAINER_NAME | grep Status | grep -m 1 running >/dev/null; do sleep 0.1; done
